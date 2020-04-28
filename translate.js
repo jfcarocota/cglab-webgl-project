@@ -106,7 +106,6 @@ const ArrowKeys = ()=>{
     });
 
     addEventListener('keyup', e =>{
-        console.log(e.keyCode);
         switch(e.keyCode){
             case 39: 
                 axis.x = 0;
