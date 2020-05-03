@@ -18,6 +18,10 @@ app.get('/scale', (req, res)=>{
     res.sendFile(`${__dirname}/public/scale.htm`);
 });
 
+app.get('/matrices', (req, res)=>{
+    res.sendFile(`${__dirname}/public/projectionModelViewMatrix.htm`);
+});
+
 
 app.listen(port, console.log(`listening at http://localhost:${port}`));
 
