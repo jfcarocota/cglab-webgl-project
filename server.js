@@ -11,11 +11,11 @@ app.get('/', (req, res)=>{
 });
 
 app.get('/translate', (req, res)=>{
-    res.sendfile('public/translate.htm');
+    res.sendFile(`${__dirname}/public/translate.htm`);
 });
 
 app.get('/scale', (req, res)=>{
-    res.sendfile('public/scale.htm');
+    res.sendFile(`${__dirname}/public/scale.htm`);
 });
 
 
