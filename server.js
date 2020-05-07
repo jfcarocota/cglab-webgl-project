@@ -32,6 +32,9 @@ app.get('/texture', (req, res)=>{
     res.sendFile(`${__dirname}/public/textureapp.htm`);
 });
 
+app.get('/spriteanim', (req, res)=>{
+    res.sendFile(`${__dirname}/public/spritesheetapp.htm`);
+});
 
 app.listen(port, console.log(`listening at http://localhost:${port}`));
 
