@@ -1,6 +1,7 @@
 
 import Shader from './Engine/Shader/Shader.js';
 import Texture from './Engine/Texture.js';
+import Time from './Engine/Time.js';
 
 const canvas = document.getElementById('glcanvas');
 const gl = canvas.getContext('webgl2');
@@ -18,11 +19,6 @@ const main = async ()=>{
     //Compile shader
 
     gl.useProgram(program);
-
-    const modelMatrix = mat4.create();
-    const viewMatrix = mat4.create();
-    const projection = mat4.create();
-
 
     const appInfo = {
         triangleCoords: [
@@ -57,7 +53,8 @@ const main = async ()=>{
         },
         textures: [
             new Texture(gl, 'images/webgltexture.png')
-        ]
+        ],
+        time: new Time()
     }
 
     mat4.perspective(
@@ -75,6 +72,7 @@ const main = async ()=>{
     );
 
     const update = ()=>{
+        console.log(appInfo.time.deltaTime());
         gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
