@@ -3,6 +3,7 @@ import Shader from './Engine/Shader/Shader.js';
 import Texture from './Engine/Texture.js';
 import Time from './Engine/Time.js';
 import Animation from './Engine/Animation.js';
+import Input from './Engine/Input.js';
 
 const canvas = document.getElementById('glcanvas');
 const gl = canvas.getContext('webgl2');
@@ -29,11 +30,12 @@ const main = async ()=>{
     const texHeight = 1/3;
 
     const appInfo = {
+        moveSpeed: 2,
         triangleCoords: [
-            -spWidth, -spHeight, 
-            spWidth, -spHeight, 
-            -spWidth, spHeight, 
-            spWidth, spHeight
+            -spWidth, -spHeight, //0, 0
+            spWidth, -spHeight, //1, 0
+            -spWidth, spHeight, //-1, 1
+            spWidth, spHeight //1, 1
         ],
         textureCoords:[
             0, 0,
@@ -62,24 +64,32 @@ const main = async ()=>{
         textures: [
             new Texture(gl, 'images/catspritesoriginal.gif')
         ],
+        flipX: false,
         time: new Time(),
+        input: new Input(),
         animations: [
-            new Animation('run', 6, texWidth, texHeight, 13)
+            new Animation('run', 6, 0, 0, texWidth, texHeight, 13),
+            new Animation('idle', 1, 0, texHeight * 2, texWidth, texHeight * 3, 1)
         ]
     }
+
+    //gl.uniform1f(appInfo.flipX, 0);
+
 
     //Running animation state starts
 
     const runAnim = appInfo.animations[0];
     runAnim.play();
+    const idleAnim = appInfo.animations[1];
+    //idleAnim.play();
 
-    canvas.addEventListener('click', ()=>{
+    /*canvas.addEventListener('click', ()=>{
         if(runAnim.isPlaying){
             runAnim.stop();
         }else{
             runAnim.play();
         }
-    });
+    });*/
     //Running animation state ends
 
     mat4.perspective(
@@ -97,6 +107,13 @@ const main = async ()=>{
     );
 
     const update = ()=>{
+
+        mat4.translate(
+            appInfo.matrices.modelMatrix,
+            appInfo.matrices.modelMatrix,
+            [appInfo.time.deltaTime() * appInfo.input.getAxis().x * appInfo.moveSpeed, 0, 0]
+        );
+
         //console.log(appInfo.time.deltaTime());
         gl.clearColor(0, 0, 0, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
@@ -112,6 +129,16 @@ const main = async ()=>{
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(runAnim.getTexCoords()), gl.STATIC_DRAW);
         gl.enableVertexAttribArray(appInfo.attribs.texturePosition);
         gl.vertexAttribPointer(appInfo.attribs.texturePosition, 2, gl.FLOAT, gl.FALSE, 0, 0);
+
+        //flipX
+        //gl.uniform1i(appInfo.flipX, appInfo.input.getAxis().x > 0 ? 0 : appInfo.input.getAxis().x < 0 ? 1 : appInfo.flipX);
+        //gl.uniform1i(appInfo.flipX, 0);
+
+        const flipX = gl.getUniformLocation(program, 'flipX');
+        appInfo.flipX = appInfo.input.getAxis().x > 0 ? true : appInfo.input.getAxis().x < 0 ? false : appInfo.flipX;
+        //gl.uniform1i(appInfo.flipX, 0);
+        gl.uniform1i(flipX, appInfo.flipX);
+
 
         gl.uniformMatrix4fv(appInfo.uniforms.projection, false, appInfo.matrices.projectionMatrix);
         gl.uniformMatrix4fv(appInfo.uniforms.model, false, appInfo.matrices.modelMatrix);

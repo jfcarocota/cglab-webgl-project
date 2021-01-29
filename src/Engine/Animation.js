@@ -3,7 +3,7 @@ import Time from './Time.js';
 
 export default class Animation{
 
-    constructor(name, framesCount, step, height, speed){
+    constructor(name, framesCount, start, startHeight, step, height, speed){
 
         this.name = name;
         this.framesCount = framesCount;
@@ -12,9 +12,9 @@ export default class Animation{
         this.speed = speed;
         this.frame = 0;
 
-        this.start = 0;
+        this.start = start;
         this.end = step;
-        this.startHeight = 0;
+        this.startHeight = startHeight;
 
         this.time = new Time();
 
@@ -25,7 +25,7 @@ export default class Animation{
 
         this.initValues = {
             end: step,
-            start: 0
+            start: start
         }
     }
 
@@ -38,12 +38,7 @@ export default class Animation{
             this.start += this.step;
             this.end += this.step;
 
-            this.texCoords =[
-                this.start, this.startHeight,
-                this.end, this.startHeight,
-                this.start, this.height,
-                this.end, this.height
-            ]
+            this.setFrame();
 
             if(this.frame === this.framesCount - 1){
                 this.resetAnimation();
@@ -68,6 +63,10 @@ export default class Animation{
         this.start = this.initValues.start;
         this.frame = 0;
 
+        this.setFrame();
+    }
+
+    setFrame(){
         this.texCoords =[
             this.start, this.startHeight,
             this.end, this.startHeight,

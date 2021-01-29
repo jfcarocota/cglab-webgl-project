@@ -96,6 +96,7 @@ const ArrowKeys = ()=>{
                 break;
             case 37: 
                 axis.x = -1;
+                break;
             case 38: 
                 axis.y = 1
                 break;
@@ -112,6 +113,7 @@ const ArrowKeys = ()=>{
                 break;
             case 37: 
                 axis.x = 0;
+                break;
             case 38: 
                 axis.y = 0
                 break;
